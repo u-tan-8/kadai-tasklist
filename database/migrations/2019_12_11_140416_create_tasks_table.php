@@ -18,6 +18,7 @@ class CreateTasksTable extends Migration
             $table->string('content');   // content カラム追加
             $table->timestamps();
         });
+
     }
 
     /**
