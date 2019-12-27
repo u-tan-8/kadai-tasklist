@@ -81,14 +81,21 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-     // getでmessages/idにアクセスされた場合の「取得表示処理」
+     // getでtasks/idにアクセスされた場合の「取得表示処理」
     public function show($id)
     {
+        
         $task = Task::find($id);
+        
+        if (\Auth::id() === $task->user_id) {
 
         return view('tasks.show', [
             'task' => $task,
         ]);
+        }
+        else{
+            return redirect('/');
+        }
     }
 
     /**
@@ -101,10 +108,23 @@ class TasksController extends Controller
     public function edit($id)
     {
         $task = Task::find($id);
+        
+        if(empty($task)) {
+            return redirect('/');
+        }
+        
+        else{
+        
+        if (\Auth::id() === $task->user_id) {
 
         return view('tasks.edit', [
             'task' => $task,
         ]);
+        }
+        else{
+            return redirect('/');
+            }
+        }
     }
 
     /**
@@ -115,6 +135,7 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
      // putまたはpatchでtasks/idにアクセスされた場合の「更新処理」
+     
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -141,8 +162,12 @@ class TasksController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
+        if (\Auth::id() === $micropost->user_id) {
         $task->delete();
-
-        return redirect('/');
+        }
+        
+        else{
+            return redirect('/');
+        }
     }
 }
