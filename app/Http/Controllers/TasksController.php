@@ -17,11 +17,18 @@ class TasksController extends Controller
     // getでtasks/にアクセスされた場合の「一覧表示処理」
     public function index()
     {
-        $tasks = Task::all();
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+            
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
         
-        return view('tasks.index', [
-            'tasks' => $tasks,
-            ]);
+        return view('tasks.index', $data);
     }
 
     /**
@@ -32,6 +39,7 @@ class TasksController extends Controller
      // getでmessages/createにアクセスされた場合の「新規登録画面表示処理」
     public function create()
     {
+        
         $task = new Task;
         
         return view('tasks.create', [
@@ -53,10 +61,16 @@ class TasksController extends Controller
             'content' => 'required|max:191',
         ]);
         
-        $task = new Task;
-        $task->status = $request->status;
-        $task->content =$request->content;
-        $task->save();
+        $request->user()->tasks()->create([
+            'status' => $request->status,
+            'content' => $request->content,
+        ]);
+        
+        // $task = new Task;
+        // $task->user_id = $user->user_id;
+        // $task->status = $request->status;
+        // $task->content = $request->content;
+        // $task->save();
         
         return redirect('/');
     }
