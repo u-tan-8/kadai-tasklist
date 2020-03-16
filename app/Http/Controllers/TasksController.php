@@ -109,15 +109,12 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
         
-<<<<<<< HEAD
         if(empty($task)) {
             return redirect('/');
         }
         
         else{
-        
-=======
->>>>>>> origin
+
         if (\Auth::id() === $task->user_id) {
 
         return view('tasks.edit', [
@@ -126,10 +123,9 @@ class TasksController extends Controller
         }
         else{
             return redirect('/');
-<<<<<<< HEAD
+
             }
-=======
->>>>>>> origin
+
         }
     }
 
@@ -168,14 +164,13 @@ class TasksController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
-<<<<<<< HEAD
         
         if (\Auth::id() === $task->user_id) {
             $task->delete();
         }
         
         return redirect('/');
-=======
+
         if (\Auth::id() === $micropost->user_id) {
         $task->delete();
         }
@@ -183,6 +178,6 @@ class TasksController extends Controller
         else{
             return redirect('/');
         }
->>>>>>> origin
+
     }
 }
